@@ -1,0 +1,12 @@
+# Pin the Go toolchain for vstar.
+# https://mise.jdx.dev/
+
+[tools]
+go = "1.25"
+
+# Notes:
+# - go.mod also declares `go 1.25`; keep these in lock-step.
+# - CI matrix runs both stable + oldstable; mise.toml pins the
+#   primary local development version (oldstable today, so the
+#   library never accidentally adopts a too-new toolchain feature).
+# - On a fresh checkout: `mise install`.

@@ -1,0 +1,76 @@
+name: go
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.go-version }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        go-version: [stable, oldstable]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+          check-latest: true
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Install gofumpt
+        run: go install mvdan.cc/gofumpt@latest
+
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.12.1
+          args: --timeout 5m
+          install-mode: binary
+
+      - name: Show toolchain
+        run: |
+          go version
+          make --version | head -1
+          golangci-lint version
+          gofumpt -version
+
+      - name: Vet
+        run: make vet
+
+      - name: Format check
+        run: make fmt-check
+
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test
+
+      - name: Coverage
+        run: make cover
+
+      - name: Fixtures parity
+        run: make fixtures-verify
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.go-version }}
+          path: |
+            coverage.out
+            coverage.html
+          if-no-files-found: warn
+          retention-days: 14
