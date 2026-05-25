@@ -13,6 +13,7 @@
       "prerelease": true,
       "prerelease-type": "alpha.0",
       "versioning": "prerelease",
+      "bump-minor-pre-major": true,
       "changelog-path": "CHANGELOG.md",
       "changelog-sections": [
         {"type": "feat", "section": "Features"},

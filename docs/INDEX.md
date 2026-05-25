@@ -60,5 +60,5 @@ scope boundary.
 ## Release process
 
 Releases are cut automatically by [release-please](https://github.com/googleapis/release-please);
-see [`release-please-config.json`](../release-please-config.json) and
+see [`.github/release-please-config.json`](../.github/release-please-config.json) and
 [`CHANGELOG.md`](../CHANGELOG.md) once the first release lands.
